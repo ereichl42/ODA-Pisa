@@ -45,3 +45,10 @@ The main objective of this project is to examine the relationship between the re
 - A Python script containing the code for processing the data, conducting the analysis, generating visualizations
 - A report summarizing the analysis findings, conclusions, and recommendations.
 - A presentation highlighting the key results and visualizations of the project.
+## Deliverables
+Data Sources:
+PISA Dataset URL:
+https://pisadataexplorer.oecd.org/ide/idepisa/
+
+Educational funding Dataset URL:
+https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/educ_uoe_finf01?format=TSV&compressed=true
