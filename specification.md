@@ -45,7 +45,7 @@ The main objective of this project is to examine the relationship between the re
 - A Python script containing the code for processing the data, conducting the analysis, generating visualizations
 - A report summarizing the analysis findings, conclusions, and recommendations.
 - A presentation highlighting the key results and visualizations of the project.
-## Deliverables
+## Datasets
 Data Sources:
 PISA Dataset URL:
 https://pisadataexplorer.oecd.org/ide/idepisa/
