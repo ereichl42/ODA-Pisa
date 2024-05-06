@@ -1,0 +1,67 @@
+{
+    "dataset_name": "educ_expenditure_per_student",
+    "description": "Public expenditure on education per pupil/student based on FTE by education level and programme orientation.",
+    "quick_tip": "This dataset provides information on public expenditure on education per pupil/student, based on Full-Time Equivalent (FTE), broken down by education level and programme orientation.",
+    "dropdown_label": "Public Expenditure per Student (EUR)",
+    "columns": [
+        {
+            "name": "freq",
+            "description": "Frequency of data collection"
+        },
+        {
+            "name": "unit",
+            "description": "Unit of measurement"
+        },
+        {
+            "name": "isced11",
+            "description": "ISCED level"
+        },
+        {
+            "name": "geo",
+            "description": "Country code or geographical region"
+        },
+        {
+            "name": "TIME_PERIOD",
+            "description": "Year of the data"
+        },
+        {
+            "name": "2012",
+            "description": "Expenditure per student for 2012 (in EUR)"
+        },
+        {
+            "name": "2013",
+            "description": "Expenditure per student for 2013 (in EUR)"
+        },
+        {
+            "name": "2014",
+            "description": "Expenditure per student for 2014 (in EUR)"
+        },
+        {
+            "name": "2015",
+            "description": "Expenditure per student for 2015 (in EUR)"
+        },
+        {
+            "name": "2016",
+            "description": "Expenditure per student for 2016 (in EUR)"
+        },
+        {
+            "name": "2017",
+            "description": "Expenditure per student for 2017 (in EUR)"
+        },
+        {
+            "name": "2018",
+            "description": "Expenditure per student for 2018 (in EUR)"
+        },
+        {
+            "name": "2019",
+            "description": "Expenditure per student for 2019 (in EUR)"
+        },
+        {
+            "name": "2020",
+            "description": "Expenditure per student for 2020 (in EUR)"
+        }
+    ],
+    "source_origin": "ec.europe.eu",
+    "source_filename": "educ_uoe_fine09.tsv",
+    "source_url": "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/educ_uoe_fine09?format=TSV&compressed=true"
+}
