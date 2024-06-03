@@ -1,0 +1,74 @@
+import tkinter as tk
+import requests
+import json
+import matplotlib.pyplot as plt
+
+def make_request():
+    dataset = dataset_var.get()
+    filter_expression = filter_expression_var.get()
+
+    # Adjust dataset identifier if it has the "A" prefix
+    if dataset.startswith("A"):
+        dataset_identifier = dataset[1:]
+    else:
+        dataset_identifier = dataset
+
+    # Construct the API URL
+    base_url = "http://stats.oecd.org/SDMX-JSON/data/"
+    filter_expression = filter_expression.replace("+", ".").replace(" ", "+")
+    agency_name = "all"
+    start_period = "2000"
+    end_period = "2022"
+    api_url = f"{base_url}{dataset_identifier}/{filter_expression}/{agency_name}?startTime={start_period}&endTime={end_period}"
+
+    try:
+        # Make the API call
+        response = requests.get(api_url)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+
+        # Parse the JSON response
+        data = json.loads(response.text)
+        
+        # Plotting the data
+        countries = [key for key in data["dataSets"][0]["series"].keys()]
+        values = [float(data["dataSets"][0]["series"][country]["observations"]["0"][0]) for country in countries]
+        plt.figure(figsize=(10, 6))
+        plt.bar(countries, values)
+        plt.xticks(rotation=90)
+        plt.xlabel('Country')
+        plt.ylabel('Value')
+        plt.title('Data Visualization')
+        plt.tight_layout()
+        plt.show()
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data: {e}")
+    except KeyError:
+        print("Error parsing data. Please check if the selected dataset is correct.")
+
+# Create the tkinter window
+window = tk.Tk()
+window.title("OECD Data Explorer")
+
+# Dropdown for dataset
+dataset_label = tk.Label(window, text="Dataset:")
+dataset_label.grid(row=0, column=0, padx=10, pady=5, sticky="e")
+datasets = ["PVREAD", "QNA"]  # Add more datasets as needed
+dataset_var = tk.StringVar(window)
+dataset_var.set(datasets[0])  # Set default dataset
+dataset_dropdown = tk.OptionMenu(window, dataset_var, *datasets)
+dataset_dropdown.grid(row=0, column=1, padx=10, pady=5, sticky="w")
+
+# Dropdown for filter expression (country selection)
+filter_expression_label = tk.Label(window, text="Filter Expression:")
+filter_expression_label.grid(row=1, column=0, padx=10, pady=5, sticky="e")
+filter_expression_var = tk.StringVar(window)
+filter_expression_entry = tk.Entry(window, textvariable=filter_expression_var)
+filter_expression_entry.grid(row=1, column=1, padx=10, pady=5, sticky="w")
+
+# Button to make the API request
+request_button = tk.Button(window, text="Get Request", command=make_request)
+request_button.grid(row=2, column=0, columnspan=2, pady=10)
+
+# Run the tkinter event loop
+window.mainloop()
