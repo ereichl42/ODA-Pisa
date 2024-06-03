@@ -1,0 +1,172 @@
+import requests
+import tkinter as tk
+from tkinter import messagebox, scrolledtext
+import json
+
+# Define the base URL and dataset code
+base_url = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/"
+dataset_code = "educ_uoe_fina01"
+
+# Function to fetch available years and countries from the dataset
+def fetch_years_and_countries():
+    print("Fetching available years and countries...")
+    # Define additional parameters
+    params = {
+        "lang": "EN",  # Language of the response
+        "format": "JSON",  # Response format
+    }
+
+    # Construct the full URL
+    url = f"{base_url}{dataset_code}"
+
+    # Make the API call
+    response = requests.get(url, params=params)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        print("Successfully retrieved data.")
+        # Parse the JSON data
+        data = response.json()
+
+        # Fetch years
+        time_dimensions = data['dimension']['time']['category']['index']
+        years = sorted([int(year) for year in time_dimensions.keys()])
+
+        # Fetch countries
+        geo_dimension = data['dimension']['geo']['category']['index']
+        if not geo_dimension:
+            return min(years), max(years), {}
+
+        countries = {name: code for code, name in data['dimension']['geo']['category']['label'].items()}
+
+        return min(years), max(years), countries
+    else:
+        print(f"Failed to retrieve data: {response.status_code}\n{response.text}")
+        return None, None, {}
+
+# Function to display fetched data in a popup
+def display_data(data):
+    print("Displaying data...")
+    # Create a new window for displaying data
+    data_window = tk.Toplevel(root)
+    data_window.title("Fetched Data")
+
+    # Convert the JSON data to a string
+    formatted_data = json.dumps(data, indent=4)
+
+    # Create a scrolled text widget to display the data
+    text_area = scrolledtext.ScrolledText(data_window, wrap=tk.WORD, width=100, height=30)
+    text_area.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+    # Insert the formatted data into the scrolled text widget
+    text_area.insert(tk.END, formatted_data)
+
+    # Make the text widget read-only
+    text_area.config(state=tk.DISABLED)
+
+# Function to fetch data from the API based on user input
+def fetch_data(time_period, countries):
+    print(f"Fetching data for period: {time_period} and countries: {countries}")
+    # Define additional parameters
+    params = {
+        "lang": "EN",  # Language of the response
+        "format": "JSON"  # Response format
+    }
+
+    if time_period:
+        if "-" in time_period:
+            start_year, end_year = time_period.split("-")
+            params["sinceTimePeriod"] = start_year
+            params["untilTimePeriod"] = end_year
+        else:
+            params["time"] = time_period
+    else:
+        params["sinceTimePeriod"] = "1900"  # Assuming 1900 is earlier than any available data
+
+    if countries:
+        params["geo"] = ",".join(countries)
+    else:
+        messagebox.showwarning("Input Error", "Please select at least one country.")
+        return
+
+    # Construct the full URL
+    url = f"{base_url}{dataset_code}"
+
+    # Make the API call
+    response = requests.get(url, params=params)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        print("Data retrieval successful.")
+        # Parse the JSON data
+        data = response.json()
+        # Display the data in a popup
+        display_data(data)
+    else:
+        print(f"Failed to retrieve data: {response.status_code}\n{response.text}")
+        # Display an error message if the request was not successful
+        messagebox.showerror("Error", f"Failed to retrieve data: {response.status_code}\n{response.text}")
+
+# Function to handle button click event
+def on_submit():
+    time_period = time_entry.get().strip()
+    selected_indices = country_listbox.curselection()
+    oecd_selected = oecd_var.get()
+
+    countries = []
+    if oecd_selected:
+        countries = [code for name, code in oecd_countries.items()]
+    elif selected_indices:
+        countries = [country_codes[country_listbox.get(i)] for i in selected_indices]
+
+    # Check if at least one country is selected
+    if not countries:
+        messagebox.showwarning("Input Error", "Please select at least one country.")
+        return
+
+    # Fetch data based on user input
+    fetch_data(time_period, countries)
+
+# Create the main application window
+root = tk.Tk()
+root.title("Eurostat Data Fetcher")
+
+# Fetch and set the default time period range and countries
+first_year, last_year, country_codes = fetch_years_and_countries()
+if not country_codes:
+    messagebox.showerror("Error", "No countries available in the dataset.")
+    root.destroy()
+
+oecd_countries = {name: code for name, code in country_codes.items() if name in ["Australia", "Austria", "Belgium", "Canada", "Denmark", "France", "Germany", "Italy", "Japan", "Netherlands", "Norway", "Sweden", "Switzerland", "United Kingdom", "United States"]}
+if first_year and last_year:
+    default_time_period = f"{first_year}-{last_year}"
+else:
+    default_time_period = ""
+
+# Create and place the time period label and entry
+time_label = tk.Label(root, text="Time Period (e.g., 2020 or 2000-2020):")
+time_label.pack(pady=5)
+time_entry = tk.Entry(root)
+time_entry.insert(0, default_time_period)
+time_entry.pack(pady=5)
+
+# Create and place the country selection listbox
+country_label = tk.Label(root, text="Select Countries:")
+country_label.pack(pady=5)
+
+country_listbox = tk.Listbox(root, selectmode=tk.MULTIPLE, height=15)
+for country in country_codes.keys():
+    country_listbox.insert(tk.END, country)
+country_listbox.pack(pady=5)
+
+# Create and place the OECD checkbox
+oecd_var = tk.BooleanVar()
+oecd_checkbox = tk.Checkbutton(root, text="Select OECD Countries", variable=oecd_var)
+oecd_checkbox.pack(pady=5)
+
+# Create and place the submit button
+submit_button = tk.Button(root, text="Fetch Data", command=on_submit)
+submit_button.pack(pady=10)
+
+# Run the application
+root.mainloop()
