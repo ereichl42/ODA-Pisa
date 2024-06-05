@@ -49,12 +49,12 @@ The main objective of this project is to examine the relationship between the re
 Data Sources:
 PISA Dataset URL:
 https://pisadataexplorer.oecd.org/ide/idepisa/
+Educational funding Dataset URL:
+https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/educ_uoe_finf01?format=TSV&compressed=true
+
 ## Libraries (Python)
 - pandas
 - numpy
 - matplotlib
 - tkinter
 - request
-
-Educational funding Dataset URL:
-https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/educ_uoe_finf01?format=TSV&compressed=true
