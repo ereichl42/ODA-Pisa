@@ -59,3 +59,5 @@ https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/educ_uoe_finf01?fo
 - matplotlib
 - tkinter
 - request
+- io
+- os
