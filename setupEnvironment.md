@@ -1,15 +1,15 @@
 ```markdown
 # Environment Setup Guide
 
-This guide provides detailed instructions for setting up your Python development environment for this project using Conda and pip. Choose the method that best suits your needs, whether you prefer using Conda for managing complex dependencies or pip for its straightforward package management.
+This guide provides detailed instructions for setting up your Python development environment for this project using Conda and pip. 
 
 ## Option 1: Using Conda and `environment.yml`
 
-Conda is a powerful tool that simplifies package and environment management. It is well-suited for projects that require handling complex dependencies, making it a popular choice in data science and computational projects.
-
+Conda is the package and environment manager for Miniconda and Anaconda.
 ### Prerequisites
 
 - **Install Miniconda** or Anaconda:
+  - Miniconda provides a leaner environment 
   - Download and install Miniconda from the [official Conda website](https://docs.conda.io/en/latest/miniconda.html).
 
 ### Creating the Environment
@@ -70,7 +70,7 @@ Pip is the standard package manager for Python. It allows you to install and man
 
 ## Conclusion
 
-You now have a functional development environment tailored for this project using either Conda or pip. For any issues, refer to the [Conda documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html) or the [pip user guide](https://pip.pypa.io/en/stable/user_guide/).
+You now have a functional development environment fullfilling all requirements for this project using either Conda or pip. For any issues, refer to the [Conda documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html) or the [pip user guide](https://pip.pypa.io/en/stable/user_guide/).
 
 If you need further assistance, please consult the project documentation, open an issue in the repository, or contact the project maintainer.
 ```
