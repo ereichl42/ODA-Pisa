@@ -1,0 +1,67 @@
+{
+    "dataset_name": "educ_expenditure_gdp",
+    "description": "Public expenditure on education by education level and programme orientation - as % of GDP.",
+    "quick_tip": "This dataset provides information on public expenditure on education as a percentage of GDP, broken down by education level and programme orientation.",
+    "dropdown_label": "Public Expenditure on Education (% of GDP)",
+    "columns": [
+        {
+            "name": "freq",
+            "description": "Frequency of data collection"
+        },
+        {
+            "name": "unit",
+            "description": "Unit of measurement"
+        },
+        {
+            "name": "isced11",
+            "description": "ISCED level"
+        },
+        {
+            "name": "geo",
+            "description": "Country code or geographical region"
+        },
+        {
+            "name": "TIME_PERIOD",
+            "description": "Year of the data"
+        },
+        {
+            "name": "2012",
+            "description": "Expenditure data for 2012"
+        },
+        {
+            "name": "2013",
+            "description": "Expenditure data for 2013"
+        },
+        {
+            "name": "2014",
+            "description": "Expenditure data for 2014"
+        },
+        {
+            "name": "2015",
+            "description": "Expenditure data for 2015"
+        },
+        {
+            "name": "2016",
+            "description": "Expenditure data for 2016"
+        },
+        {
+            "name": "2017",
+            "description": "Expenditure data for 2017"
+        },
+        {
+            "name": "2018",
+            "description": "Expenditure data for 2018"
+        },
+        {
+            "name": "2019",
+            "description": "Expenditure data for 2019"
+        },
+        {
+            "name": "2020",
+            "description": "Expenditure data for 2020"
+        }
+    ],
+    "source_origin": "ec.europe.eu",
+    "source_filename": "educ_uoe_fine06.tsv",
+    "source_url": "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/educ_uoe_fine06?format=TSV&compressed=true"
+}
