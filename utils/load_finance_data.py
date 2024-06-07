@@ -46,25 +46,42 @@ def load_expenditure_data(file_path):
     return data_melted
 
 
-def filter_expenditure(data, country, education_levels, start_year, end_year):
+def filter_expenditure_data(data, country=None, education_levels=None, start_year=None, end_year=None):
     """
-    Filter the expenditure data based on given parameters.
+    Filter the raw expenditure data based on given parameters.
 
     Args:
     - data (pd.DataFrame): The expenditure data.
-    - country (str): The country code.
-    - education_levels (list): List of education levels to filter.
-    - start_year (int): The start year for the filter.
-    - end_year (int): The end year for the filter.
+    - country (str, optional): The country code.
+    - education_levels (list, optional): List of education levels to filter.
+    - start_year (int, optional): The start year for the filter. If end_year is None, this will be the only year.
+    - end_year (int, optional): The end year for the filter.
 
     Returns:
     - pd.DataFrame: Filtered expenditure data.
     """
-    filtered_data = data[
-        (data["Country"] == country) &
-        (data["Education_Level"].isin(education_levels)) &
-        (data["Year"].astype(int).between(start_year, end_year))
-    ]
+    filtered_data = data.copy()
+
+    if country is not None:
+        filtered_data = filtered_data[filtered_data["Country"] == country]
+
+    if education_levels is not None:
+        filtered_data = filtered_data[filtered_data["Education_Level"].isin(
+            education_levels)]
+
+    if start_year is not None:
+        if end_year is None:
+            # only filter for that year
+            end_year = start_year
+
+        filtered_data = filtered_data[
+            (filtered_data["Year"].astype(
+                int).between(start_year, end_year))
+        ]
+    else:
+        # All years
+        pass
+
     return filtered_data
 
 
@@ -78,6 +95,9 @@ if expenditure_data is not None:
     start_year = 2012
     end_year = 2015
 
-    filtered_expenditure_data = filter_expenditure(
+    filtered_expenditure_data = filter_expenditure_data(
         expenditure_data, country, education_levels, start_year, end_year)
     print(filtered_expenditure_data)
+
+
+filter_expenditure_data(expenditure_data, country="AT", start_year=2013)
