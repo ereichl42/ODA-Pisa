@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eurostat Data Fetcher</title>
+</head>
+<body>
+    <h1>Eurostat Data Fetcher</h1>
+    <label for="time-period">Time Period (e.g., 2020 or 2000-2020):</label>
+    <input type="text" id="time-period">
+    <br><br>
+    <label for="countries">Select Countries:</label>
+    <select id="countries" multiple style="height: 150px; width: 200px;"></select>
+    <br><br>
+    <label for="oecd">Select OECD Countries:</label>
+    <input type="checkbox" id="oecd" onclick="toggleOECDCountries()">
+    <br><br>
+    <button onclick="fetchData()">Fetch Data</button>
+    <button onclick="generatePlot()">Generate Plot</button>
+    <br><br>
+    <pre id="result"></pre>
+    <img id="plot" style="display:none; max-width: 100%;">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/api/years_countries')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('time-period').value = `${data.first_year}-${data.last_year}`;
+                    const countriesSelect = document.getElementById('countries');
+                    for (const [name, code] of Object.entries(data.countries)) {
+                        const option = document.createElement('option');
+                        option.value = code;
+                        option.text = name;
+                        countriesSelect.add(option);
+                    }
+                });
+        });
+
+        function toggleOECDCountries() {
+            const oecdCountries = ["AT", "AU", "BE", "CA", "CL", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IS", "IE", "IL", "IT", "JP", "KR", "LV", "LT", "LU", "MX", "NL", "NZ", "NO", "PL", "PT", "SK", "SI", "ES", "SE", "CH", "TR", "GB", "US"];
+            const countriesSelect = document.getElementById('countries');
+            const oecdChecked = document.getElementById('oecd').checked;
+
+            for (const option of countriesSelect.options) {
+                if (oecdCountries.includes(option.value)) {
+                    option.selected = oecdChecked;
+                }
+            }
+        }
+
+        function fetchData() {
+            const timePeriod = document.getElementById('time-period').value;
+            const countriesSelect = document.getElementById('countries');
+            const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
+
+            if (selectedCountries.length === 0) {
+                alert("Please select at least one country.");
+                return;
+            }
+
+            fetch('/api/fetch_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ time_period: timePeriod, countries: selectedCountries })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById('result').textContent = JSON.stringify(data, null, 4);
+                }
+            });
+        }
+
+        function generatePlot() {
+            const timePeriod = document.getElementById('time-period').value;
+            const countriesSelect = document.getElementById('countries');
+            const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
+
+            if (selectedCountries.length === 0) {
+                alert("Please select at least one country.");
+                return;
+            }
+
+            fetch('/api/plot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ time_period: timePeriod, countries: selectedCountries })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    return response.json().then(data => { throw new Error(data.error); });
+                }
+            })
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const img = document.getElementById('plot');
+                img.src = url;
+                img.style.display = 'block';
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+        }
+    </script>
+</body>
+</html>
