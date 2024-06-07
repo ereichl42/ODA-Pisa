@@ -3,6 +3,16 @@ import pandas as pd
 
 
 def load_PISA_data_fromExcel(file_path):
+    """
+    Load and process the PISA data from an Excel file with multiple tabs.
+
+    Args:
+    - file_path (str): The path to the Excel file.
+
+    Returns:
+    - dict: A dictionary with the type of results as the key and the data as a pandas DataFrame.
+    """
+
     # Test if path exists
     if not os.path.exists(file_path):
         print('File not found:', file_path)
@@ -86,7 +96,7 @@ def load_PISA_data_fromExcel(file_path):
     return data
 
 
-# Example usage:
+#### EXAMPLE USAGE ####
 project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 data_dir = 'data/pisa_data/original_xls_source_combined_tables'
 file_name = 'IDEExcelExport-Apr222024-0515PM.xls'
