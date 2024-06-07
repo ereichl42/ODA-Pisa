@@ -86,18 +86,18 @@ def filter_expenditure_data(data, country=None, education_levels=None, start_yea
 
 
 #### EXAMPLE USAGE ####
-file_path = "data/expenditure_data/educ_expenditure_gdp.tsv"
-expenditure_data = load_expenditure_data(file_path)
+if __name__ == "__main__":
+    file_path = "data/expenditure_data/educ_expenditure_gdp.tsv"
+    expenditure_data = load_expenditure_data(file_path)
 
-if expenditure_data is not None:
-    country = "AT"
-    education_levels = ["ED0", "ED01"]
-    start_year = 2012
-    end_year = 2015
+    if expenditure_data is not None:
+        country = "AT"
+        education_levels = ["ED0", "ED01"]
+        start_year = 2012
+        end_year = 2015
 
-    filtered_expenditure_data = filter_expenditure_data(
-        expenditure_data, country, education_levels, start_year, end_year)
-    print(filtered_expenditure_data)
+        filtered_expenditure_data = filter_expenditure_data(
+            expenditure_data, country, education_levels, start_year, end_year)
+        print(filtered_expenditure_data)
 
-
-filter_expenditure_data(expenditure_data, country="AT", start_year=2013)
+    filter_expenditure_data(expenditure_data, country="AT", start_year=2013)

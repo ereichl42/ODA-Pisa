@@ -97,20 +97,21 @@ def load_PISA_data_fromExcel(file_path):
 
 
 #### EXAMPLE USAGE ####
-project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-data_dir = 'data/pisa_data/original_xls_source_combined_tables'
-file_name = 'IDEExcelExport-Apr222024-0515PM.xls'
+if __name__ == "__main__":
+    project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    data_dir = 'data/pisa_data/original_xls_source_combined_tables'
+    file_name = 'IDEExcelExport-Apr222024-0515PM.xls'
 
-file_path = os.path.join(project_dir, data_dir, file_name)
-data = load_PISA_data_fromExcel(file_path)
+    file_path = os.path.join(project_dir, data_dir, file_name)
+    data = load_PISA_data_fromExcel(file_path)
 
-# The data is now in a dictionary with the type of results as the first key.
-# The data itself is still in a pandas DataFrame.
+    # The data is now in a dictionary with the type of results as the first key.
+    # The data itself is still in a pandas DataFrame.
 
-# For testing, I print the first few rows of each tab
-for resultType, df in data.items():
-    print('Result type:', resultType)
-    print('First and last few rows of the data:')
-    print(df.head(5))
-    print('...')
-    print(df.tail(5))
+    # For testing, I print the first few rows of each tab
+    for resultType, df in data.items():
+        print('Result type:', resultType)
+        print('First and last few rows of the data:')
+        print(df.head(5))
+        print('...')
+        print(df.tail(5))
