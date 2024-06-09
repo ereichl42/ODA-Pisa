@@ -12,7 +12,7 @@ def load_PISA_data_fromExcel(file_path):
 
     Returns:
     - dict: A dictionary with the type of results as the key and the data as a pandas DataFrame.
-    Each DataFrame contains the data for one type of results (mathematics, reading, science).
+    Each DataFrame contains the data for one type of results (math, reading, science).
     The dataframe's columns are: 'Year', 'Country', 'Average', 'Standard Error'.
     """
 
@@ -30,7 +30,7 @@ def load_PISA_data_fromExcel(file_path):
     # The data does not start with first cell in each tab. Thus, searching for certain info and the actual data is needed.
 
     # There are types of results which are here defined as keywords.
-    keywords = ['mathematics', 'reading', 'science']
+    keywords = ['math', 'reading', 'science']
     # The header of the data is known too and can be used to search for the actual data
     header = ['Year/Study', 'Jurisdiction', 'Average', 'Standard Error']
 
@@ -38,7 +38,7 @@ def load_PISA_data_fromExcel(file_path):
     for tab in tabs:
         df = pd.read_excel(file_path, sheet_name=tab)
 
-        # In the first few lines of each tab there is always a description if the data is about mathematics, reading, or science
+        # In the first few lines of each tab there is always a description if the data is about math, reading, or science
         # Search for the type of results
         resultType = None
         header_row = None
@@ -107,7 +107,7 @@ def load_PISA_data_fromExcel(file_path):
     return data
 
 
-def load_pisa_data(data_dict):
+def transform_PISA_data_to_JSON(data_dict):
     """
     Load the PISA data from a dictionary of pandas DataFrames.
 
@@ -124,16 +124,54 @@ def load_pisa_data(data_dict):
         pisa_results = json.load(f)
 
     # Remove the example data which was included in the template. The metadata is kept.
-    pisa_results["countries"] = []
+    pisa_results["countries"] = {}
 
-    # I can't just transform the dataframe to JSON since each result type is in a separate dataframe.
-    # I need to merge the dataframes first.
-    # Additionally, I calculate a additional metric for a average value of mathemathics, reading, and science.
+    # To comply with the defined JSON template, the data must be transformed to the nested structure, combined for each country and year.
+    # Direct transformation of the dataframes to JSON is not possible, since the data is split into multiple dataframes.
     for resultType, df in data_dict.items():
-        pass
+        # Iterate over the rows of the dataframes and add the data line by line to the JSON structure
+        for i, row in df.iterrows():
+            country = row['Country']
+            year = str(int(row['Year']))
+            # For the result value it must be checked if it is a number. Otherwise there are multiple symbols showing that data is not available.
+            # Check if the average is a number, if not, skip the row.
+            average = pd.to_numeric(row['Average'], errors='coerce')
+            if pd.isna(average):
+                continue
+
+            # Check if the country is already in the JSON structure, if not, add it with emtpy directory
+            if country not in pisa_results["countries"]:
+                pisa_results["countries"][country] = {}
+
+            # Check if the year is already in the JSON structure, if not, add it with emtpy directory
+            if year not in pisa_results["countries"][country]:
+                pisa_results["countries"][country][year] = {}
+
+            # Add the data to the JSON structure
+            pisa_results["countries"][country][year][resultType] = average
+
+    # Additionally, the combined score is calculated and added to the JSON structure
+    for country in pisa_results["countries"]:
+        for year in pisa_results["countries"][country]:
+            # Check if all three types of results are available, otherwise skip the year
+            allExist = True
+            for resultType in ['math', 'reading', 'science']:
+                if resultType not in pisa_results["countries"][country][year]:
+                    allExist = False
+                    break
+
+            if allExist:
+                math = pisa_results["countries"][country][year]["math"]
+                reading = pisa_results["countries"][country][year]["reading"]
+                science = pisa_results["countries"][country][year]["science"]
+
+                combined = (math + reading + science) / 3
+                pisa_results["countries"][country][year]["combined"] = combined
+
+    return pisa_results
 
 
-        #### EXAMPLE USAGE ####
+    #### EXAMPLE USAGE ####
 if __name__ == "__main__":
     project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     data_dir = 'data/pisa_data/original_xls_source_combined_tables'
@@ -152,3 +190,7 @@ if __name__ == "__main__":
         print(df.head(4))
         print('...')
         print(df.tail(4))
+
+    # Print JSON structure
+    pisa_results = transform_PISA_data_to_JSON(data)
+    print(json.dumps(pisa_results, indent=2))
