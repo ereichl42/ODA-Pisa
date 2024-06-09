@@ -1,3 +1,4 @@
+import datetime
 import os
 import pandas as pd
 import json
@@ -171,11 +172,76 @@ def transform_PISA_data_to_JSON(data_dict):
     return pisa_results
 
 
-    #### EXAMPLE USAGE ####
+def update_PISA_JSON_byExcel(file_path, json_path=None, updateDate=None):
+    """
+    Update the PISA JSON file with new data from an Excel file.
+
+    Args:
+    - file_path (str): The path to the Excel file.
+    - json_path (str, optional): The path to the JSON file. If None, the default path is used with new date.
+    - updateDate (DateTime, optional): The date of the update.
+
+    Returns:
+    - bool: True if the JSON file was updated successfully, False otherwise.
+    """
+
+    # Check if the Excel file exists
+    if not os.path.exists(file_path):
+        print('File not found:', file_path)
+        return False
+
+    default_json_path = 'data/pisa_data/pisa_dataset.json'
+
+    if json_path is None:
+        json_path = default_json_path
+
+    if updateDate is None:
+        updateDate = datetime.datetime.now()
+    else:
+        # Check if given in the correct format
+        if not isinstance(updateDate, datetime.datetime):
+            print('Incorrect date format, should be datetime object')
+            return False
+
+        # Check if stored file is newer than the given date
+        if os.path.exists(json_path):
+            with open(json_path, 'r') as f:
+                pisa_results = json.load(f)
+                tmp = pisa_results["metadata"]["update"]
+                dateFromFile = datetime.datetime.strptime(tmp, '%Y-%m-%d')
+                if dateFromFile > updateDate:
+                    print(
+                        'The given date of the new sourece is older than the last update of the JSON file')
+                    return False
+
+    # So everything is ready to update the JSON file with new data from the Excel file
+
+    # Load the data from the Excel file
+    data = load_PISA_data_fromExcel(file_path)
+
+    if data is None:
+        print('The Excel file could not be loaded correctly')
+        return False
+
+    # Transform the data to the JSON structure
+    pisa_results = transform_PISA_data_to_JSON(data)
+
+    # Edit the metadata of the JSON file
+    pisa_results["metadata"]["update"] = updateDate.strftime('%Y-%m-%d')
+
+    # Save the JSON file, overwrite the old one
+    with open(json_path, 'w') as f:
+        json.dump(pisa_results, f, indent=2)
+
+    return True
+
+
+#### EXAMPLE USAGE ####
 if __name__ == "__main__":
     project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     data_dir = 'data/pisa_data/original_xls_source_combined_tables'
     file_name = 'IDEExcelExport-Apr222024-0515PM.xls'
+    src_date = '2024-04-22'
 
     file_path = os.path.join(project_dir, data_dir, file_name)
     data = load_PISA_data_fromExcel(file_path)
@@ -192,5 +258,9 @@ if __name__ == "__main__":
         print(df.tail(4))
 
     # Print JSON structure
-    pisa_results = transform_PISA_data_to_JSON(data)
-    print(json.dumps(pisa_results, indent=2))
+    # pisa_results = transform_PISA_data_to_JSON(data)
+    # print(json.dumps(pisa_results, indent=2))
+
+    # Update the JSON file
+    # src_date = datetime.datetime.strptime(src_date, '%Y-%m-%d')
+    # update_PISA_JSON_byExcel(file_path, updateDate=src_date)
