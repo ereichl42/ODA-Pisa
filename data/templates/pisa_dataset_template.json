@@ -12,17 +12,20 @@
                 "2012": {
                     "math": 500,
                     "reading": 495,
-                    "science": 505
+                    "science": 505,
+                    "combined": 500
                 },
                 "2015": {
                     "math": 505,
                     "reading": 500,
-                    "science": 510
+                    "science": 510,
+                    "combined": 505
                 },
                 "2018": {
                     "math": 515,
                     "reading": 505,
-                    "science": 520
+                    "science": 520,
+                    "combined": 515
                 }
             }
         },
@@ -32,17 +35,20 @@
                 "2012": {
                     "math": 450,
                     "reading": 440,
-                    "science": 460
+                    "science": 460,
+                    "combined": 450
                 },
                 "2015": {
                     "math": 455,
                     "reading": 445,
-                    "science": 465
+                    "science": 465,
+                    "combined": 455
                 },
                 "2018": {
                     "math": 460,
                     "reading": 450,
-                    "science": 470
+                    "science": 470,
+                    "combined": 460
                 }
             }
         }
