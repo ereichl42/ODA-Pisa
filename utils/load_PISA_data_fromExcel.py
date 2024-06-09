@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import json
 
 
 def load_PISA_data_fromExcel(file_path):
@@ -11,6 +12,8 @@ def load_PISA_data_fromExcel(file_path):
 
     Returns:
     - dict: A dictionary with the type of results as the key and the data as a pandas DataFrame.
+    Each DataFrame contains the data for one type of results (mathematics, reading, science).
+    The dataframe's columns are: 'Year', 'Country', 'Average', 'Standard Error'.
     """
 
     # Test if path exists
@@ -82,13 +85,21 @@ def load_PISA_data_fromExcel(file_path):
         if end_row is None:
             end_row = i
 
-        # Extract the actual data from header to the end row.
-        # For additional cleanup I
-        # 1. drop the columns with NaN values (probably empty columns in the beginning and end of the data)
-        # 2. and reset the index
-        df_clean = df[header_row:end_row]
+        # Extract the actual data with additional cleanup, in the following steps:
+        # 1. Extract data from below the header row to the end row.
+        df_clean = df[header_row+1:end_row]
+        # 2. Drop the columns with NaN values (probably empty columns in the beginning and end of the data)
         df_clean = df_clean.dropna(axis=1, how='all')
+        # 3. Reset the index
         df_clean = df_clean.reset_index(drop=True)
+        # 4. Define a proper header for the dataframe with clear names
+        newNames = ['Year', 'Country', 'Average', 'Standard Error']
+        df_clean.columns = newNames
+
+        # This is now a almost clean dataframe, extracted from the Excel file as it was.
+        # However, the year is only given once in the beginning of the data till the next year is given.
+        # Thus, I fill up the NaN values in the 'Year' column with the previous value.
+        df_clean['Year'] = df_clean['Year'].fillna(method='ffill')
 
         # Store the data in the dictionary with the type of results as the key
         data[resultType] = df_clean
@@ -115,44 +126,14 @@ def load_pisa_data(data_dict):
     # Remove the example data which was included in the template. The metadata is kept.
     pisa_results["countries"] = []
 
+    # I can't just transform the dataframe to JSON since each result type is in a separate dataframe.
+    # I need to merge the dataframes first.
+    # Additionally, I calculate a additional metric for a average value of mathemathics, reading, and science.
     for resultType, df in data_dict.items():
-        # Clean the data and transform it
-        df = df.rename(columns={'Year/Study': 'Year',
-                       'Jurisdiction': 'Country', 'Average': resultType})
-
-        # Fill forward the 'Year' column where there are gaps
-        df['Year'] = df['Year'].fillna(method='ffill')
-
-        # Replace non-numeric values with None
-        df[resultType] = pd.to_numeric(df[resultType], errors='coerce')
-
-        for _, row in df.iterrows():
-            year = int(row['Year'])
-            country = row['Country']
-            score = row[resultType] if pd.notnull(row[resultType]) else None
-
-            # Find or create the country entry
-            country_entry = next(
-                (item for item in pisa_results["countries"] if item["country"] == country), None)
-            if not country_entry:
-                country_entry = {"country": country, "data": {}}
-                pisa_results["countries"].append(country_entry)
-
-            # Find or create the year entry
-            if year not in country_entry["data"]:
-                country_entry["data"][year] = {"combined": None}
-
-            # Add the score to the corresponding type
-            country_entry["data"][year][resultType] = score
-
-            # Calculate the combined score if all three types are present
-            if all(key in country_entry["data"][year] and country_entry["data"][year][key] is not None for key in ["math", "reading", "science"]):
-                combined_score = (country_entry["data"][year]["math"] + country_entry["data"]
-                                  [year]["reading"] + country_entry["data"][year]["science"]) / 3
-                country_entry["data"][year]["combined"] = combined_score
+        pass
 
 
-#### EXAMPLE USAGE ####
+        #### EXAMPLE USAGE ####
 if __name__ == "__main__":
     project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     data_dir = 'data/pisa_data/original_xls_source_combined_tables'
@@ -168,6 +149,6 @@ if __name__ == "__main__":
     for resultType, df in data.items():
         print('Result type:', resultType)
         print('First and last few rows of the data:')
-        print(df.head(5))
+        print(df.head(4))
         print('...')
-        print(df.tail(5))
+        print(df.tail(4))
