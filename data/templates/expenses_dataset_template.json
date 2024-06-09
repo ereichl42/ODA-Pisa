@@ -3,7 +3,8 @@
         "type": "Public Expenditure on Education (% of GDP)",
         "description": "Public expenditure on education by education level and programme orientation - as % of GDP.",
         "unit": "Percentage of GDP",
-        "source": "Eurostat"
+        "source": "Eurostat",
+        "update": "2024-05-01"
     },
     "education_levels": {
         "ED01": {

@@ -4,7 +4,7 @@
         "description": "PISA scores for Math, Reading, and Science",
         "unit": "Score",
         "source": "OECD",
-        "update": "2018-12-03"
+        "update": "2024-05-01"
     },
     "countries": {
         "AT": {
