@@ -110,7 +110,7 @@ def load_PISA_data_fromExcel(file_path):
 
 def transform_PISA_data_to_JSON(data_dict):
     """
-    Load the PISA data from a dictionary of pandas DataFrames.
+    Transform the PISA data to a nested JSON structure according to the defined template.
 
     Args:
     - data_dict (dict): A dictionary with the type of results as the key and the data as a pandas DataFrame.
