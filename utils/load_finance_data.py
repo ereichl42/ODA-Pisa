@@ -3,7 +3,7 @@ import pandas as pd
 import io
 
 
-def load_expenditure_data(file_path):
+def load_financial_data(file_path):
     """
     Load and process the expenditure data from a TSV file.
 
@@ -46,7 +46,20 @@ def load_expenditure_data(file_path):
     return data_melted
 
 
-def filter_expenditure_data(data, country=None, education_levels=None, start_year=None, end_year=None):
+def transform_financial_data(data):
+    """
+    Transform the raw expenditure data to a more useful format.
+
+    Args:
+    - data (pd.DataFrame): The expenditure data.
+
+    Returns
+    - pd.DataFrame: Transformed expenditure data in wide format.
+    """
+    pass
+
+
+def filter_financial_data(data, country=None, education_levels=None, start_year=None, end_year=None):
     """
     Filter the raw expenditure data based on given parameters.
 
@@ -87,8 +100,12 @@ def filter_expenditure_data(data, country=None, education_levels=None, start_yea
 
 #### EXAMPLE USAGE ####
 if __name__ == "__main__":
-    file_path = "data/expenditure_data/educ_expenditure_gdp.tsv"
-    expenditure_data = load_expenditure_data(file_path)
+    file_path = "data/financial_data/original_tsv_source/educ_expenditure_gdp.tsv"
+    # Check if the file exists
+    if not os.path.exists(file_path):
+        print('File not found:', file_path)
+        exit()
+    expenditure_data = load_financial_data(file_path)
 
     if expenditure_data is not None:
         country = "AT"
@@ -96,12 +113,12 @@ if __name__ == "__main__":
         start_year = 2012
         end_year = 2015
 
-        filtered_expenditure_data = filter_expenditure_data(
+        filtered_expenditure_data = filter_financial_data(
             expenditure_data, country, education_levels, start_year, end_year)
         print(filtered_expenditure_data)
 
     # Test: Filter all expenditure data for Austria (AT) from year 2013
-    filtered2 = filter_expenditure_data(
+    filtered2 = filter_financial_data(
         expenditure_data, country="AT", start_year=2013)
     # Show only the column Education_Level and Expenditure, without the index column:
     print(filtered2[["Education_Level", "Expenditure"]].to_string(index=False)

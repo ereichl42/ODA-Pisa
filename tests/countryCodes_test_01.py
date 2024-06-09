@@ -3,14 +3,14 @@
 
 import os
 import sys
-from utils.load_finance_data import load_expenditure_data
+from utils.load_finance_data import load_financial_data
 from utils.load_PISA_data_fromExcel import load_PISA_data_fromExcel
 
 path_pisa = "data/pisa_data/original_xls_source_combined_tables/IDEExcelExport-Apr222024-0515PM.xls"
 path_finance = "data/financial_data/original_tsv_source/educ_expenditure_gdp.tsv"
 
 pisa_data = load_PISA_data_fromExcel(path_pisa)
-finance_data = load_expenditure_data(path_finance)
+finance_data = load_financial_data(path_finance)
 
 pisa_df = pisa_data['mathematics']
 finance_df = finance_data
