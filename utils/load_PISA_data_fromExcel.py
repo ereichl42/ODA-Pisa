@@ -96,6 +96,62 @@ def load_PISA_data_fromExcel(file_path):
     return data
 
 
+def load_pisa_data(data_dict):
+    """
+    Load the PISA data from a dictionary of pandas DataFrames.
+
+    Args:
+    - data_dict (dict): A dictionary with the type of results as the key and the data as a pandas DataFrame.
+
+    Returns:
+    - dict: The PISA results in a nested JSON structure.
+    """
+
+    # I take a deep copy of the JSON template structure.
+    template_path = 'data/templates/pisa_dataset_template.json'
+    with open(template_path, 'r') as f:
+        pisa_results = json.load(f)
+
+    # Remove the example data which was included in the template. The metadata is kept.
+    pisa_results["countries"] = []
+
+    for resultType, df in data_dict.items():
+        # Clean the data and transform it
+        df = df.rename(columns={'Year/Study': 'Year',
+                       'Jurisdiction': 'Country', 'Average': resultType})
+
+        # Fill forward the 'Year' column where there are gaps
+        df['Year'] = df['Year'].fillna(method='ffill')
+
+        # Replace non-numeric values with None
+        df[resultType] = pd.to_numeric(df[resultType], errors='coerce')
+
+        for _, row in df.iterrows():
+            year = int(row['Year'])
+            country = row['Country']
+            score = row[resultType] if pd.notnull(row[resultType]) else None
+
+            # Find or create the country entry
+            country_entry = next(
+                (item for item in pisa_results["countries"] if item["country"] == country), None)
+            if not country_entry:
+                country_entry = {"country": country, "data": {}}
+                pisa_results["countries"].append(country_entry)
+
+            # Find or create the year entry
+            if year not in country_entry["data"]:
+                country_entry["data"][year] = {"combined": None}
+
+            # Add the score to the corresponding type
+            country_entry["data"][year][resultType] = score
+
+            # Calculate the combined score if all three types are present
+            if all(key in country_entry["data"][year] and country_entry["data"][year][key] is not None for key in ["math", "reading", "science"]):
+                combined_score = (country_entry["data"][year]["math"] + country_entry["data"]
+                                  [year]["reading"] + country_entry["data"][year]["science"]) / 3
+                country_entry["data"][year]["combined"] = combined_score
+
+
 #### EXAMPLE USAGE ####
 if __name__ == "__main__":
     project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

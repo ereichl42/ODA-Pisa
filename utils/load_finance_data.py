@@ -100,4 +100,12 @@ if __name__ == "__main__":
             expenditure_data, country, education_levels, start_year, end_year)
         print(filtered_expenditure_data)
 
-    filter_expenditure_data(expenditure_data, country="AT", start_year=2013)
+    # Test: Filter all expenditure data for Austria (AT) from year 2013
+    filtered2 = filter_expenditure_data(
+        expenditure_data, country="AT", start_year=2013)
+    # Show only the column Education_Level and Expenditure, without the index column:
+    print(filtered2[["Education_Level", "Expenditure"]].to_string(index=False)
+          )
+
+    # Get all possible values for the column Education_Level
+    print(expenditure_data["Education_Level"].unique())
