@@ -1,10 +1,7 @@
-# app/routes.py
-
 import os
 import json
-from flask import Flask, jsonify, request, Blueprint, render_template
+from flask import Blueprint, jsonify, request, render_template
 
-# Blueprint configuration
 routes = Blueprint('routes', __name__)
 
 # Load country list from JSON file
@@ -34,12 +31,12 @@ def get_years_countries():
         "countries": country_codes,
         "finance_metrics": finance_metrics
     }
+    print(json.dumps(years_countries_data, indent=4))  # Debug print
     return jsonify(years_countries_data)
 
 
 @routes.route('/api/pisa_data', methods=['GET'])
 def get_pisa_data():
-    # Load PISA data from JSON file
     with open('data/pisa_data/pisa_dataset.json') as f:
         pisa_data = json.load(f)
     return jsonify(pisa_data)

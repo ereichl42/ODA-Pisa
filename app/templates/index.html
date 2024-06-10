@@ -4,30 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eurostat Data Fetcher</title>
+    <title>Data Visualization</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 
 <body>
-    <h1>Eurostat Data Fetcher</h1>
+    <h1>Data Visualization</h1>
+
     <label for="countries">Select Countries:</label>
-    <select id="countries" multiple style="height: 150px; width: 200px;"></select>
-    <br><br>
-    <label for="finance-metric">Select Finance Metric:</label>
-    <select id="finance-metric"></select>
-    <button id="apply-metric">Apply</button>
-    <br><br>
+    <select id="countries" multiple></select>
+
+    <label for="finance-metrics">Select Finance Metric:</label>
+    <select id="finance-metrics"></select>
+    <button id="apply-metric">Apply Metric</button>
+
     <label for="start-year">Start Year:</label>
     <input type="range" id="start-year" min="2000" max="2022" value="2000">
-    <span id="start-year-value">2000</span>
-    <br>
+    <span id="start-year-label">2000</span>
+
     <label for="end-year">End Year:</label>
     <input type="range" id="end-year" min="2000" max="2022" value="2022">
-    <span id="end-year-value">2022</span>
-    <br><br>
-    <button onclick="updateGraph()">Update Graph</button>
-    <br><br>
-    <canvas id="myChart" width="400" height="200"></canvas>
+    <span id="end-year-label">2022</span>
+
+    <canvas id="data-graph"></canvas>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>
