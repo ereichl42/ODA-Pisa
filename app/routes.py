@@ -2,7 +2,7 @@
 
 import os
 import json
-from flask import Flask, jsonify, request, Blueprint
+from flask import Flask, jsonify, request, Blueprint, render_template
 
 # Blueprint configuration
 routes = Blueprint('routes', __name__)
@@ -17,6 +17,11 @@ LAST_YEAR = 2022
 
 # Directory containing finance metric JSON files
 FINANCE_DATA_DIR = 'data/financial_data'
+
+
+@routes.route('/')
+def index():
+    return render_template('index.html')
 
 
 @routes.route('/api/years_countries', methods=['GET'])
