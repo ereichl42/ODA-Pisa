@@ -17,8 +17,8 @@ The main objective of this project is to examine the relationship between the re
 - Importing and merging the data from the PISA study and education investments from various countries.
 - Cleaning and preprocessing the data to prepare it for analysis.
 - Conducting statistical analyses to examine the relationship between PISA results and education investments.
-- Developing visualizations (e.g. charts, graphs, maps) to illustrate the findings.
-- Interpreting the results and deriving conclusions.
+- Developing visualizations to illustrate the findings.
+
 
 ## User Story
 | As a             | I want to                                                                                          | So that                                                                       
@@ -43,7 +43,7 @@ The main objective of this project is to examine the relationship between the re
 
 ## Deliverables
 - A Python script containing the code for processing the data, conducting the analysis, generating visualizations
-- A report summarizing the analysis findings, conclusions, and recommendations.
+- A github-project summarizing the analysis findings, conclusions and the sourcecode.
 - A presentation highlighting the key results and visualizations of the project.
 ## Datasets
 Data Sources:
