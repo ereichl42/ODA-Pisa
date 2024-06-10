@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Education and PISA Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <h1>Education Investments and PISA Results</h1>
+    <label for="time-period">Time Period (e.g., 2020 or 2000-2020):</label>
+    <input type="text" id="time-period">
+    <br><br>
+    <label for="countries">Select Countries:</label>
+    <select id="countries" multiple style="height: 150px; width: 200px;"></select>
+    <br><br>
+    <label for="oecd">Select OECD Countries:</label>
+    <input type="checkbox" id="oecd" onclick="toggleOECDCountries()">
+    <br><br>
+    <button onclick="fetchData()">Fetch Data</button>
+    <button onclick="generatePlot()">Generate Plot</button>
+    <br><br>
+    <pre id="result"></pre>
+    <div id="chart-container">
+        <canvas id="chart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+
+</html>
