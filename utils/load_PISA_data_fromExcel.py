@@ -102,8 +102,15 @@ def load_PISA_data_fromExcel(file_path):
         # Thus, I fill up the NaN values in the 'Year' column with the previous value.
         df_clean['Year'] = df_clean['Year'].fillna(method='ffill')
 
-        # Last cleanup, specially for the country Türkiye, which creates problems in the JSON structure
+        ## Country Names - Country Codes ##
+        # Türkiye creates problems, it is replaced with Turkey
         df_clean['Country'] = df_clean['Country'].replace('Türkiye', 'Turkey')
+
+        # For easier handling, all country names are converted to country codes
+        country_codes = pd.read_json('data/reference/country_codes.json')
+        country_codes = country_codes['countries']
+        # The country names in the dataframe are mapped to the country codes
+        df_clean['Country'] = df_clean['Country'].map(country_codes)
 
         # Store the data in the dictionary with the type of results as the key
         data[resultType] = df_clean
