@@ -38,39 +38,24 @@ countries_finance_2 = []
 for country in finance_data_2["countries"]:
     countries_finance_2.append(country)
 
-# Write the countries to a file
-path_countries = "tests/countries.txt"
-with open(path_countries, "w") as file:
-    file.write("Countries in PISA dataset:\n")
-    for country in countries_pisa:
-        file.write(country + "\n")
 
-# Use country code list to figure out which countries are missing in the financial dataset
+# Compare pisa countries with country code list
+# Load the country code list
 path_country_codes = "data/reference/country_codes.json"
 with open(path_country_codes, "r") as file:
     country_codes = json.load(file)
-    country_codes = country_codes["countries"]
+    country_codes = country_codes["countries"].values()
 
-# Transform pisa countries to country codes
-countries_pisa_codes = []
+missingInPisa = []
+missingInCountryList = []
 for country in countries_pisa:
-    # The country codes are given as values in the dictionary, where the key is the country name
-    countries_pisa_codes.append(country_codes[country])
+    if country not in country_codes:
+        missingInCountryList.append(country)
+for country in country_codes:
+    if country not in countries_pisa:
+        missingInPisa.append(country)
 
-# The financial data are already in country codes, so no need to transform them
-
-# Find the countries that are in the PISA dataset, but not in the financial dataset
-missing_countries_1 = []
-for country in countries_pisa_codes:
-    if country not in countries_finance_1 or country not in countries_finance_2:
-        missing_countries_1.append(country)
-
-missing_countries_2 = []
-for country in countries_finance_1:
-    if country not in countries_pisa_codes:
-        missing_countries_2.append(country)
-
-print("Countries in PISA dataset, but not in financial dataset:")
-print(missing_countries_1)
-print("Countries in financial dataset, but not in PISA dataset:")
-print(missing_countries_2)
+print("Missing in PISA dataset:")
+print(missingInCountryList)
+print("Missing in country code list:")
+print(missingInPisa)

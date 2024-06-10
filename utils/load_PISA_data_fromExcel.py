@@ -111,6 +111,9 @@ def load_PISA_data_fromExcel(file_path):
             country_codes = json.load(f)
             country_codes = country_codes['countries']
 
+        # Filter out all countries not listed in the country codes list (which is OECD countries)
+        df_clean = df_clean[df_clean['Country'].isin(country_codes.keys())]
+
         # The country names in the dataframe are mapped to the country codes
         df_clean['Country'] = df_clean['Country'].map(country_codes)
 

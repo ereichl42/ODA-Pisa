@@ -45,6 +45,15 @@ def load_financial_data(file_path):
     data_melted.columns = ["Frequency", "Unit",
                            "Education_Level", "Country", "Year", "Expenditure"]
 
+    # For easier handling, all country names are converted to country codes
+    with open('data/reference/country_codes.json', 'r') as f:
+        country_codes = json.load(f)
+        country_codes = country_codes['countries']
+
+    # Filter out all countries not listed in the country codes list (which is OECD countries)
+    data_melted = data_melted[data_melted['Country'].isin(
+        country_codes.values())]
+
     # Return processed data as a DataFrame
     return data_melted
 
