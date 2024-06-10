@@ -107,8 +107,10 @@ def load_PISA_data_fromExcel(file_path):
         df_clean['Country'] = df_clean['Country'].replace('Türkiye', 'Turkey')
 
         # For easier handling, all country names are converted to country codes
-        country_codes = pd.read_json('data/reference/country_codes.json')
-        country_codes = country_codes['countries']
+        with open('data/reference/country_codes.json', 'r') as f:
+            country_codes = json.load(f)
+            country_codes = country_codes['countries']
+
         # The country names in the dataframe are mapped to the country codes
         df_clean['Country'] = df_clean['Country'].map(country_codes)
 
