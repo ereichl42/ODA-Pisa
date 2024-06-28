@@ -2,7 +2,7 @@ import os
 import json
 from flask import Blueprint, jsonify, request, render_template
 
-routes = Blueprint('routes', __name__)
+routes = Blueprint('routes/api/', __name__)
 
 # Load country list from JSON file
 with open('data/reference/country_codes.json') as f:
@@ -44,8 +44,13 @@ def get_pisa_data():
 
 @routes.route('/api/finance_data', methods=['GET'])
 def get_finance_data():
+    
     metric = request.args.get('metric')
+    console.log(metric)
+    
+    #metric = "educ_expenditure_gdp"
     metric_file = os.path.join(FINANCE_DATA_DIR, f"{metric}.json")
+
     if not os.path.exists(metric_file):
         return jsonify({"error": "Finance metric data not found"}), 404
 

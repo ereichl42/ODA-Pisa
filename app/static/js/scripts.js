@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch('/api/years_countries')
         .then(response => response.json())
         .then(data => {
-            console.log(data);  // Debug print
+            //console.log(data);  // Debug print
             populateCountries(data.countries);
             populateFinanceMetrics(data.finance_metrics);
         })
@@ -24,38 +24,20 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function populateCountries(countries) {
-    console.log("Populating countries:", countries);  // Debug print
+    //console.log("Populating countries:", countries);  // Debug print
     const countriesSelect = document.getElementById('countries');
     countriesSelect.innerHTML = '';  // Clear existing options
-
-    // For debugging, add some random stuff to the select
-    for (let i = 0; i < 10; i++) {
+    
+    // Populate country dropdown using Object.entries directly
+    Object.entries(countries.countries).forEach(([name, code]) => {
         const option = document.createElement('option');
-        option.value = i;
-        option.text = `Country ${i}`;
-        countriesSelect.add(option);
-    }
-
-    // Check if countries is an object
-    if (typeof countries === 'object') {
-        // Iterate over the properties of the object
-        for (const name in countries) {
-            if (countries.hasOwnProperty(name)) {
-                console.log(`Name: ${name}, Code: ${countries[name]}`);  // Log each country name and code
-                const option = document.createElement('option');
-                option.value = countries[name];
-                option.text = name;
-                countriesSelect.add(option);
-            }
-        }
-    } else {
-        console.error("Countries data is not in the expected format.");
-    }
+        option.value = name; // Use the country name as the value
+        option.textContent = name; // Display only the country name
+        countriesSelect.appendChild(option);
+    });
 }
 
-
 function populateFinanceMetrics(metrics) {
-    console.log(metrics);  // Debug print
     const metricsSelect = document.getElementById('finance-metrics');
     metricsSelect.innerHTML = '';  // Clear existing options
     metrics.forEach(metric => {
@@ -68,6 +50,7 @@ function populateFinanceMetrics(metrics) {
 
 function fetchFinanceData() {
     const metric = document.getElementById('finance-metrics').value;
+    //console.log('Fetching finance data for metric:', metric);
     fetch(`/api/finance_data?metric=${metric}`)
         .then(response => response.json())
         .then(data => {
@@ -132,6 +115,9 @@ function updateGraph() {
 function filterDataByYearsAndCountries(data, startYear, endYear, countries) {
     // Filter data based on the selected years and countries
     // This function will depend on the structure of your data
+    if (typeof data === 'object' && !Array.isArray(data)) {
+        data = Object.entries(data).map(([key, value]) => value);
+    }
     return data.filter(entry => {
         const year = parseInt(entry.Year);
         return year >= startYear && year <= endYear && countries.includes(entry.Country);
