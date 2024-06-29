@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Visualization</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="../static/css/init.css">
+    <script src="../static/js/init.js"></script>
 </head>
 
 <body>
@@ -25,11 +26,6 @@
     <label for="end-year">End Year:</label>
     <input type="range" id="end-year" min="2000" max="2022" value="2022">
     <span id="end-year-label">2022</span>
-
-    <canvas id="data-graph"></canvas>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>
 
 </html>
