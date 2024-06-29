@@ -1,0 +1,15 @@
+{
+  "name": "oda-pisa",
+  "version": "1.0.0",
+  "description": "The goal is to examine the relationship between educational investments and student performance across various countries and years.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chart.js": "^4.4.3"
+  }
+}
