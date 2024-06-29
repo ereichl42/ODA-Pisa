@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Visualization</title>
-    <link rel="stylesheet" href="../static/css/init.css">
-    <script src="../static/js/init.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
 
 <body>
@@ -26,6 +25,8 @@
     <label for="end-year">End Year:</label>
     <input type="range" id="end-year" min="2000" max="2022" value="2022">
     <span id="end-year-label">2022</span>
+
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 
 </html>

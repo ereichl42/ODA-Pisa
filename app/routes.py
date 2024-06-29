@@ -44,11 +44,11 @@ def get_pisa_data():
 
 @routes.route('/api/finance_data', methods=['GET'])
 def get_finance_data():
-    
+
     metric = request.args.get('metric')
-    console.log(metric)
-    
-    #metric = "educ_expenditure_gdp"
+    print(f"Requested finance metric: {metric}")
+
+    # metric = "educ_expenditure_gdp"
     metric_file = os.path.join(FINANCE_DATA_DIR, f"{metric}.json")
 
     if not os.path.exists(metric_file):
