@@ -1,0 +1,9 @@
+.range-slider {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.range-slider input {
+    width: 45%;
+}

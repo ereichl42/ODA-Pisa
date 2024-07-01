@@ -4,29 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Visualization</title>
+    <title>PISA VS. EDUCATIONAL INVESTMENTS ANALYSIS</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/countrySelectionBox.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/doubleRangeSlider.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chart.css') }}">
 </head>
 
 <body>
-    <h1>Data Visualization</h1>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Filter Options</h2>
+            <!-- Country Selection Component -->
+            <div id="country-selection"></div>
 
-    <label for="countries">Select Countries:</label>
-    <select id="countries" multiple></select>
+            <!-- Finance Metric Dropdown -->
+            <label for="finance-metric">Select Finance Metric:</label>
+            <select id="finance-metric" name="finance-metric">
+                <option value="metric1">Metric 1</option>
+                <option value="metric2">Metric 2</option>
+                <option value="metric3">Metric 3</option>
+                <option value="metric4">Metric 4</option>
+            </select>
 
-    <label for="finance-metrics">Select Finance Metric:</label>
-    <select id="finance-metrics"></select>
-    <button id="apply-metric">Apply Metric</button>
+            <!-- Year Range Slider Component -->
+            <div id="year-range-slider"></div>
 
-    <label for="start-year">Start Year:</label>
-    <input type="range" id="start-year" min="2000" max="2022" value="2000">
-    <span id="start-year-label">2000</span>
+            <!-- Education Level Slider Component -->
+            <div id="education-level-slider"></div>
 
-    <label for="end-year">End Year:</label>
-    <input type="range" id="end-year" min="2000" max="2022" value="2022">
-    <span id="end-year-label">2022</span>
+            <button id="update-graph">Update Graph</button>
+        </div>
+        <div class="main-content">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
 
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/countrySelectionBox.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/doubleRangeSlider.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
 </body>
 
 </html>
