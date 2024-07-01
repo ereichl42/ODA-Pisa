@@ -20,46 +20,75 @@ document.addEventListener("DOMContentLoaded", function () {
             // Initialize sliders with available education levels from the response
             createDoubleRangeSlider('education-level-range-slider', 'start-education-level', 'end-education-level', minEducationLevel, maxEducationLevel);
         })
-        .then(response => response.json())
-        .then(pisaData => {
-            window.pisaData = pisaData;
-        })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => console.error('Error fetching initial data:', error));
+
+    // Initialize the chart
+    initializeChart();
 
     // Event listener for button
-    document.getElementById('apply-metric').addEventListener('click', fetchFinanceData);
+    document.getElementById('apply-metric').addEventListener('click', applySelectionAndUpdateGraph);
 });
 
-function fetchFinanceData() {
-    const metric = document.getElementById('finance-metrics').value;
-    fetch(`/api/finance_data?metric=${metric}`)
+// Function to apply all filters, fetch missing data if needed, and update the graph
+function applySelectionAndUpdateGraph() {
+    // Check if PISA data is missing
+    if (!window.pisaData) {
+        fetchPisaData();
+    }
+    // Check if the finace data is missing corresponding to the selected metric
+    typeOfMetric = document.getElementById('finance-metrics').value;
+    if (!window.financeData || !(typeOfMetric in window.financeData)) {
+        fetchFinanceData(typeOfMetric);
+    }
+    // Update the chart
+    updateChart();
+}
+
+// Function to fetch PISA data
+function fetchPisaData() {
+    fetch('/api/pisa_data')
         .then(response => response.json())
         .then(data => {
-            window.financeData = data;
-            updateChart();
+            window.pisaData = data;
+        })
+        .catch(error => console.error('Error fetching PISA data:', error));
+}
+
+// Function to fetch Finance data of a selected metric
+function fetchFinanceData(typeOfMetric) {
+    fetch(`/api/finance_data?metric=${typeOfMetric}`)
+        .then(response => response.json())
+        .then(data => {
+            // The global variable is a dictionary with keys as metric names and values as the corresponding data
+            // If global variable is not defined yet, initialize it as an empty dictionary and add the received data
+            window.financeData = window.financeData || {};
+            window.financeData[typeOfMetric] = data;
         })
         .catch(error => console.error('Error fetching finance data:', error));
 }
 
-
 function updateChart() {
-    const startYear = parseInt(document.getElementById('start-year').value);
-    const endYear = parseInt(document.getElementById('end-year').value);
-    const selectedCountries = Array.from(document.getElementById('countries').selectedOptions).map(option => option.value);
-
+    // Guard clause required if the data was not fetched yet
+    // This should never happen since the fetching is done before
     if (!window.pisaData || !window.financeData) {
         return;
     }
 
-    const filteredPisaData = filterDataByYearsAndCountries(window.pisaData, startYear, endYear, selectedCountries);
-    const filteredFinanceData = filterDataByYearsAndCountries(window.financeData, startYear, endYear, selectedCountries);
+    const selectedCountries = Array.from(document.getElementById('countries').selectedOptions).map(option => option.value);
+    // Guard clause if no countries are selected
+    if (selectedCountries.length === 0) {
+        return;
+    }
 
-    updateChartData(filteredPisaData, filteredFinanceData, startYear, endYear);
-}
+    const selectedMetric = document.getElementById('finance-metrics').value;
+    const startYear = parseInt(document.getElementById('start-year').value);
+    const endYear = parseInt(document.getElementById('end-year').value);
 
-function filterDataByYearsAndCountries(data, startYear, endYear, countries) {
-    return data.filter(entry => {
-        const year = parseInt(entry.Year);
-        return year >= startYear && year <= endYear && countries.includes(entry.Country);
-    });
+    // DEBUG: Log the selected countries, metric, and years
+    console.log('Selected countries:', selectedCountries);
+    console.log('Selected metric:', selectedMetric);
+    console.log('Selected years:', startYear, endYear);
+
+    // TODO: Update the chart with the selected data
+    //
 }
