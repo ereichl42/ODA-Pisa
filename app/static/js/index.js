@@ -41,21 +41,6 @@ function fetchFinanceData() {
         .catch(error => console.error('Error fetching finance data:', error));
 }
 
-function updateYearLabels() {
-    const startYear = document.getElementById('start-year').value;
-    const endYear = document.getElementById('end-year').value;
-    document.getElementById('start-year-label').textContent = startYear;
-    document.getElementById('end-year-label').textContent = endYear;
-    updateChart();
-}
-
-function updateEducationLevelLabels() {
-    const startLevel = document.getElementById('start-education-level').value;
-    const endLevel = document.getElementById('end-education-level').value;
-    document.getElementById('start-education-level-label').textContent = startLevel;
-    document.getElementById('end-education-level-label').textContent = endLevel;
-    updateChart();
-}
 
 function updateChart() {
     const startYear = parseInt(document.getElementById('start-year').value);
