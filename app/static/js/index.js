@@ -10,12 +10,15 @@ document.addEventListener("DOMContentLoaded", function () {
             populateCountries(data.countries);
             populateFinanceMetrics(data.finance_metrics);
 
-            // Initialize sliders with years from the response
-            createDoubleRangeSlider('year-range-slider', 'start-year', 'end-year', updateYearLabels, data.first_year, data.last_year);
-            createDoubleRangeSlider('education-level-range-slider', 'start-education-level', 'end-education-level', updateEducationLevelLabels, 1, 5); // Assuming education levels are from 1 to 5
+            // TODO: Fetch available education levels
+            // Temporary education levels: 1 to 5
+            const minEducationLevel = 1;
+            const maxEducationLevel = 5;
 
-            // Fetch PISA data
-            return fetch('/api/pisa_data');
+            // Initialize sliders with available years from the response
+            createDoubleRangeSlider('year-range-slider', 'start-year', 'end-year', data.first_year, data.last_year);
+            // Initialize sliders with available education levels from the response
+            createDoubleRangeSlider('education-level-range-slider', 'start-education-level', 'end-education-level', minEducationLevel, maxEducationLevel);
         })
         .then(response => response.json())
         .then(pisaData => {
