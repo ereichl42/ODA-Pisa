@@ -13,37 +13,20 @@
 
 <body>
     <div class="container">
-        <div class="sidebar">
-            <h2>Filter Options</h2>
-            <!-- Country Selection Component -->
-            <div id="country-selection"></div>
-
-            <!-- Finance Metric Dropdown -->
-            <label for="finance-metric">Select Finance Metric:</label>
-            <select id="finance-metric" name="finance-metric">
-                <option value="metric1">Metric 1</option>
-                <option value="metric2">Metric 2</option>
-                <option value="metric3">Metric 3</option>
-                <option value="metric4">Metric 4</option>
-            </select>
-
-            <!-- Year Range Slider Component -->
+        <div class="controls">
+            <div id="country-selection-box"></div>
+            <div id="finance-metric-selection-box"></div>
             <div id="year-range-slider"></div>
-
-            <!-- Education Level Slider Component -->
-            <div id="education-level-slider"></div>
-
-            <button id="update-graph">Update Graph</button>
+            <div id="education-level-range-slider"></div>
+            <button id="apply-metric">Update Graph</button>
         </div>
-        <div class="main-content">
-            <canvas id="myChart"></canvas>
+        <div class="graph-container">
+            <canvas id="data-graph"></canvas>
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/countrySelectionBox.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/doubleRangeSlider.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 
 </html>

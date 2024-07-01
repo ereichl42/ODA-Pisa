@@ -1,72 +1,60 @@
+import { populateCountries, populateFinanceMetrics } from './countrySelectionBox.js';
+import { createDoubleRangeSlider } from './doubleRangeSlider.js';
+import { initializeChart, updateChartData } from './chart.js';
+
 document.addEventListener("DOMContentLoaded", function () {
-    // Fetch initial data for countries and finance metrics
+    // Fetch initial data for countries, years, and finance metrics
     fetch('/api/years_countries')
         .then(response => response.json())
         .then(data => {
-            //console.log(data);  // Debug print
             populateCountries(data.countries);
             populateFinanceMetrics(data.finance_metrics);
-        })
-        .catch(error => console.error('Error fetching years and countries:', error));
 
-    // Fetch PISA data
-    fetch('/api/pisa_data')
+            // Initialize sliders with years from the response
+            createDoubleRangeSlider('year-range-slider', 'start-year', 'end-year', updateYearLabels, data.first_year, data.last_year);
+            createDoubleRangeSlider('education-level-range-slider', 'start-education-level', 'end-education-level', updateEducationLevelLabels, 1, 5); // Assuming education levels are from 1 to 5
+
+            // Fetch PISA data
+            return fetch('/api/pisa_data');
+        })
         .then(response => response.json())
-        .then(data => {
-            window.pisaData = data;
+        .then(pisaData => {
+            window.pisaData = pisaData;
         })
-        .catch(error => console.error('Error fetching PISA data:', error));
+        .catch(error => console.error('Error fetching data:', error));
 
-    // Event listeners for sliders and button
+    // Event listener for button
     document.getElementById('apply-metric').addEventListener('click', fetchFinanceData);
-    document.getElementById('start-year').addEventListener('input', updateYearLabels);
-    document.getElementById('end-year').addEventListener('input', updateYearLabels);
 });
-
-function populateCountries(countries) {
-    //console.log("Populating countries:", countries);  // Debug print
-    const countriesSelect = document.getElementById('countries');
-    countriesSelect.innerHTML = '';  // Clear existing options
-    
-    // Populate country dropdown using Object.entries directly
-    Object.entries(countries.countries).forEach(([name, code]) => {
-        const option = document.createElement('option');
-        option.value = name; // Use the country name as the value
-        option.textContent = name; // Display only the country name
-        countriesSelect.appendChild(option);
-    });
-}
-
-function populateFinanceMetrics(metrics) {
-    const metricsSelect = document.getElementById('finance-metrics');
-    metricsSelect.innerHTML = '';  // Clear existing options
-    metrics.forEach(metric => {
-        const option = document.createElement('option');
-        option.value = metric;
-        option.text = metric.replace(/_/g, ' ').toUpperCase();
-        metricsSelect.add(option);
-    });
-}
 
 function fetchFinanceData() {
     const metric = document.getElementById('finance-metrics').value;
-    //console.log('Fetching finance data for metric:', metric);
     fetch(`/api/finance_data?metric=${metric}`)
         .then(response => response.json())
         .then(data => {
             window.financeData = data;
-            updateGraph();
+            updateChart();
         })
         .catch(error => console.error('Error fetching finance data:', error));
 }
 
 function updateYearLabels() {
-    document.getElementById('start-year-label').textContent = document.getElementById('start-year').value;
-    document.getElementById('end-year-label').textContent = document.getElementById('end-year').value;
-    updateGraph();
+    const startYear = document.getElementById('start-year').value;
+    const endYear = document.getElementById('end-year').value;
+    document.getElementById('start-year-label').textContent = startYear;
+    document.getElementById('end-year-label').textContent = endYear;
+    updateChart();
 }
 
-function updateGraph() {
+function updateEducationLevelLabels() {
+    const startLevel = document.getElementById('start-education-level').value;
+    const endLevel = document.getElementById('end-education-level').value;
+    document.getElementById('start-education-level-label').textContent = startLevel;
+    document.getElementById('end-education-level-label').textContent = endLevel;
+    updateChart();
+}
+
+function updateChart() {
     const startYear = parseInt(document.getElementById('start-year').value);
     const endYear = parseInt(document.getElementById('end-year').value);
     const selectedCountries = Array.from(document.getElementById('countries').selectedOptions).map(option => option.value);
@@ -78,56 +66,12 @@ function updateGraph() {
     const filteredPisaData = filterDataByYearsAndCountries(window.pisaData, startYear, endYear, selectedCountries);
     const filteredFinanceData = filterDataByYearsAndCountries(window.financeData, startYear, endYear, selectedCountries);
 
-    // Code to update the graph using Chart.js or any other library
-    // Example:
-    const ctx = document.getElementById('data-graph').getContext('2d');
-    const chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: getYearsInRange(startYear, endYear),
-            datasets: [
-                {
-                    label: 'PISA Data',
-                    data: filteredPisaData,
-                    borderColor: 'blue',
-                    fill: false
-                },
-                {
-                    label: 'Finance Data',
-                    data: filteredFinanceData,
-                    borderColor: 'green',
-                    fill: false
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    type: 'linear',
-                    position: 'bottom'
-                }
-            }
-        }
-    });
+    updateChartData(filteredPisaData, filteredFinanceData, startYear, endYear);
 }
 
 function filterDataByYearsAndCountries(data, startYear, endYear, countries) {
-    // Filter data based on the selected years and countries
-    // This function will depend on the structure of your data
-    if (typeof data === 'object' && !Array.isArray(data)) {
-        data = Object.entries(data).map(([key, value]) => value);
-    }
     return data.filter(entry => {
         const year = parseInt(entry.Year);
         return year >= startYear && year <= endYear && countries.includes(entry.Country);
     });
-}
-
-function getYearsInRange(startYear, endYear) {
-    const years = [];
-    for (let year = startYear; year <= endYear; year++) {
-        years.push(year);
-    }
-    return years;
 }

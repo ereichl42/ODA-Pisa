@@ -1,37 +1,26 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const yearRangeSliderContainer = document.getElementById('year-range-slider');
-  const educationLevelSliderContainer = document.getElementById('education-level-slider');
-
-  yearRangeSliderContainer.innerHTML = `
-    <label for="year-range">Select Year Range:</label>
-    <div class="range-slider">
-      <input type="range" id="start-year" name="start-year" min="2000" max="2020">
-      <input type="range" id="end-year" name="end-year" min="2000" max="2020">
-    </div>
+export function createDoubleRangeSlider(containerId, startInputId, endInputId, onChange) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = `
+      <div class="range-slider">
+          <input type="range" id="${startInputId}" name="${startInputId}" min="2000" max="2020">
+          <input type="range" id="${endInputId}" name="${endInputId}" min="2000" max="2020">
+      </div>
   `;
 
-  educationLevelSliderContainer.innerHTML = `
-    <label for="education-level-range">Select Education Level:</label>
-    <div class="range-slider">
-      <input type="range" id="start-education-level" name="start-education-level" min="1" max="5">
-      <input type="range" id="end-education-level" name="end-education-level" min="1" max="5">
-    </div>
-  `;
+  const startInput = document.getElementById(startInputId);
+  const endInput = document.getElementById(endInputId);
 
-  // Logic to synchronize the two sliders if needed
-  const synchronizeSliders = (startSlider, endSlider) => {
-    startSlider.addEventListener('input', () => {
-      if (parseInt(startSlider.value) > parseInt(endSlider.value)) {
-        startSlider.value = endSlider.value;
-      }
-    });
-    endSlider.addEventListener('input', () => {
-      if (parseInt(endSlider.value) < parseInt(startSlider.value)) {
-        endSlider.value = startSlider.value;
-      }
-    });
-  };
+  startInput.addEventListener('input', () => {
+    if (parseInt(startInput.value) > parseInt(endInput.value)) {
+      startInput.value = endInput.value;
+    }
+    onChange();
+  });
 
-  synchronizeSliders(document.getElementById('start-year'), document.getElementById('end-year'));
-  synchronizeSliders(document.getElementById('start-education-level'), document.getElementById('end-education-level'));
-});
+  endInput.addEventListener('input', () => {
+    if (parseInt(endInput.value) < parseInt(startInput.value)) {
+      endInput.value = startInput.value;
+    }
+    onChange();
+  });
+}

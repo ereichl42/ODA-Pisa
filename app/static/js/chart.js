@@ -1,14 +1,22 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
+let myChart;
+
+export function initializeChart() {
+    const ctx = document.getElementById('data-graph').getContext('2d');
+    myChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: [], // Add your labels here
             datasets: [{
-                label: 'Sample Data',
-                data: [], // Add your data here
+                label: 'PISA Data',
+                data: [], // Add your PISA data here
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Finance Data',
+                data: [], // Add your finance data here
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1
             }]
         },
@@ -20,23 +28,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+}
 
-    document.getElementById('update-graph').addEventListener('click', function () {
-        const countries = Array.from(document.getElementById('countries').selectedOptions).map(option => option.value);
-        const financeMetric = document.getElementById('finance-metric').value;
-        const startYear = document.getElementById('start-year').value;
-        const endYear = document.getElementById('end-year').value;
-        const startEducationLevel = document.getElementById('start-education-level').value;
-        const endEducationLevel = document.getElementById('end-education-level').value;
+export function updateChartData(filteredPisaData, filteredFinanceData, startYear, endYear) {
+    myChart.data.labels = getYearsInRange(startYear, endYear);
+    myChart.data.datasets[0].data = filteredPisaData;
+    myChart.data.datasets[1].data = filteredFinanceData;
+    myChart.update();
+}
 
-        console.log('Selected Countries:', countries);
-        console.log('Selected Finance Metric:', financeMetric);
-        console.log('Year Range:', startYear, endYear);
-        console.log('Education Level Range:', startEducationLevel, endEducationLevel);
+function getYearsInRange(startYear, endYear) {
+    const years = [];
+    for (let year = startYear; year <= endYear; year++) {
+        years.push(year);
+    }
+    return years;
+}
 
-        // Update chart data here
-        // Example: myChart.data.labels = [...];
-        // Example: myChart.data.datasets[0].data = [...];
-        // myChart.update();
-    });
-});
+document.addEventListener('DOMContentLoaded', initializeChart);
