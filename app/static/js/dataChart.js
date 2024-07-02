@@ -65,8 +65,12 @@ export function initializeChart() {
 export function updateChartData(pisaData, financeData) {
     const datasets = [];
 
+    // Create list of countries from data and generate colors for them
+    const countries = Object.keys(pisaData).concat(Object.keys(financeData));
+    const countryColors = generateCountryColors(countries);
+
     // Prepare PISA data for chart
-    Object.keys(pisaData).forEach(country => {
+    Object.keys(pisaData).forEach((country, index) => {
         const countryData = pisaData[country];
         const years = Object.keys(countryData).map(year => parseInt(year));
         const pisaValues = years.map(year => countryData[year]);
@@ -74,14 +78,15 @@ export function updateChartData(pisaData, financeData) {
         datasets.push({
             label: `${country} PISA`,
             data: years.map((year, index) => ({ x: year, y: pisaValues[index] })),
-            borderColor: getRandomColor(),
+            borderColor: countryColors[index].color,
+            borderDash: [5, 5], // Dashed line
             fill: false,
             yAxisID: 'pisa-axis' // Associate dataset with the PISA y-axis
         });
     });
 
     // Prepare Finance data for chart
-    Object.keys(financeData).forEach(country => {
+    Object.keys(financeData).forEach((country, index) => {
         const countryData = financeData[country];
         const years = Object.keys(countryData).map(year => parseInt(year));
         const financeValues = years.map(year => {
@@ -95,15 +100,13 @@ export function updateChartData(pisaData, financeData) {
         datasets.push({
             label: `${country} Finance`,
             data: years.map((year, index) => ({ x: year, y: financeValues[index] })),
-            borderColor: getRandomColor(),
+            borderColor: countryColors[index].color,
+            pointStyle: 'circle', // Dotted line
+            pointRadius: 3,
             fill: false,
             yAxisID: 'finance-axis' // Associate dataset with the Finance y-axis
         });
     });
-
-    // Update the finance-axis after calculating min and max
-    //chart.options.scales.y[1].min = financeMin;
-    //chart.options.scales.y[1].max = financeMax;
 
     // Update datasets and refresh the chart
     chart.data.datasets = datasets;
@@ -117,4 +120,25 @@ function getRandomColor() {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+}
+
+// Instead of random colors, the colors should be chosen in a range of colors and based on alphabetical order of the countries
+function generateCountryColors(countryNames) {
+    const colors = [];
+    const sortedCountryNames = countryNames.sort();
+
+    for (let i = 0; i < sortedCountryNames.length; i++) {
+        const color = generateColor(i, sortedCountryNames.length);
+        colors.push({ country: sortedCountryNames[i], color });
+    }
+
+    return colors;
+}
+
+function generateColor(index, totalCountries) {
+    const hue = (index / totalCountries) * 360;
+    const saturation = 70;
+    const lightness = 50;
+
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }

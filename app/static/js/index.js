@@ -1,4 +1,5 @@
-import { populateCountries, populateFinanceMetrics } from './countrySelectionBox.js';
+import { populateCountries } from './countrySelectionBox.js';
+import { populateFinanceMetrics, populatePisaMetrics } from './dropDownMenus.js';
 import { createDoubleRangeSlider } from './doubleRangeSlider.js';
 import { initializeChart, updateChartData } from './dataChart.js';
 
@@ -9,6 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             populateCountries(data.countries);
             populateFinanceMetrics(data.finance_metrics);
+
+            // Hardcoded even though it is not nice
+            const pisa_metrics = ['math', 'reading', 'science', 'combined'];
+            populatePisaMetrics(pisa_metrics);
 
             // TODO: Fetch available education levels
             // Temporary education levels: 1 to 5
@@ -89,7 +94,7 @@ function prepareAndUpdateChart() {
     }
 
     // const selectedMetric_pisa = document.getElementById('pisa-metrics').value;
-    const selectedMetric_pisa = 'combined'; // Hardcoded for now, TODO: Implement selection of PISA metrics
+    const selectedMetric_pisa = document.getElementById('pisa-metrics').value;
     const selectedMetric_finance = document.getElementById('finance-metrics').value;
     const startYear = parseInt(document.getElementById('start-year').value);
     const endYear = parseInt(document.getElementById('end-year').value);
