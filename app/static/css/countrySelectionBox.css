@@ -1,3 +1,15 @@
 #country-selection-box {
-    margin-bottom: 20px;
+    flex-grow: 0.7;
+    /* Allows the selection box to expand and take available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Centers the content vertically */
+    border: 1px solid green;
+    /* Debugging style */
+}
+
+#countries {
+    flex-grow: 1;
+    /* Allows the selection box to expand and take available space */
 }

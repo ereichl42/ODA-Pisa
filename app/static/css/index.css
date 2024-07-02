@@ -10,29 +10,46 @@ body {
 
 .container {
     display: flex;
-    width: 90%;
-    height: 90%;
+    width: 95%;
+    height: 95%;
     background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.sidebar {
-    width: 25%;
-    padding: 20px;
-    border-right: 1px solid #ddd;
-    box-sizing: border-box;
-}
-
 .main-content {
-    width: 75%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    /* Ensures padding is included in the element's width and height */
 }
 
-#myChart {
-    width: 100%;
-    height: 100%;
+#myControls {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    max-width: 300px;
+    /* Optional: Set a max-width if needed */
+    border: 1px solid #8d0000;
+    box-sizing: border-box;
+    /* Ensures padding is included in the element's width and height */
+    overflow-y: auto;
+    /* Adds a scrollbar if content overflows */
+}
+
+#myGraphs {
+    flex-grow: 1;
+    /* Allows this section to take up the remaining space */
+    display: flex;
+    flex-direction: column;
+    /* Stacks graphs vertically */
+    justify-content: center;
+    /* Centers the graphs vertically */
+    align-items: center;
+    /* Centers the graphs horizontally */
+    padding: 20px;
+    box-sizing: border-box;
+    /* Ensures padding is included in the element's width and height */
+    border: 1px solid blue;
+    /* Debugging style */
 }
 
 label {

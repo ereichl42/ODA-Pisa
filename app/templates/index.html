@@ -14,15 +14,20 @@
 
 <body>
     <div class="container">
-        <div class="controls">
+        <div class="main-content" id="myControls">
             <div id="country-selection-box"></div>
             <div id="finance-metric-selection-box"></div>
             <div id="year-range-slider"></div>
             <div id="education-level-range-slider"></div>
             <button id="apply-metric">Update Graph</button>
         </div>
-        <div class="graph-container">
-            <canvas id="data-graph"></canvas>
+        <div class="main-content" id="myGraphs">
+            <div class="graph-container">
+                <canvas id="data-graph"></canvas>
+            </div>
+            <div class="graph-container">
+                <canvas id="second-graph"></canvas>
+            </div>
         </div>
     </div>
 
