@@ -38,3 +38,22 @@ export function createDoubleRangeSlider(containerId, startInputId, endInputId, m
   // Initial update of the labels
   // updateLabels();
 }
+
+export function initializeSlider(sliderId, outputId, min, max) {
+  const slider = document.getElementById(sliderId);
+  const output = document.getElementById(outputId);
+
+  noUiSlider.create(slider, {
+      start: [min, max],
+      connect: true,
+      range: {
+          'min': min,
+          'max': max
+      }
+  });
+
+  slider.noUiSlider.on('update', function (values, handle) {
+      output.innerHTML = `Selected range: ${Math.round(values[0])} - ${Math.round(values[1])}`;
+  });
+}
+
