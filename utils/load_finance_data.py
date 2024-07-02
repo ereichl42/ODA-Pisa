@@ -89,7 +89,8 @@ def transform_financial_data_to_JSON(data):
     # Group the data of dataframe by country and year, then iterate over the groups
     grouped = data.groupby(["Country", "Year"])
     for (country, year), group in grouped:
-        year = str(year)    # Convert year to string for JSON compatibility
+        # Convert year to string for JSON compatibility, with no whitespaces
+        year = str(year).strip()
 
         # Check if the country and year are already in the JSON structure, if not, add them with empty dictionaries
         if country not in financial_results["countries"]:
