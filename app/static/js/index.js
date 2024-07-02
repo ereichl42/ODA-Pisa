@@ -81,7 +81,7 @@ function prepareAndUpdateChart() {
     // This should never happen since the fetching is done before
     if (!window.pisaData || !window.financeData) {
         // DEBUG: Log the missing data
-        console.error('Missing data:', window.pisaData, window.financeData);
+        //console.error('Missing data:', window.pisaData, window.financeData);
         return;
     }
 
@@ -89,7 +89,7 @@ function prepareAndUpdateChart() {
     // Guard clause if no countries are selected
     if (selectedCountries.length === 0) {
         // DEBUG: Log the missing countries
-        console.error('No countries selected');
+        //console.error('No countries selected');
         return;
     }
 
@@ -107,11 +107,11 @@ function prepareAndUpdateChart() {
     const mappedEndEducationLevel = educationLevelMap[endEducationLevel];
 
     // DEBUG: Log the selected countries, metric, and years
-    console.log('Selected countries:', selectedCountries);
-    console.log('Selected PISA metric:', selectedMetric_pisa);
-    console.log('Selected finance metric:', selectedMetric_finance);
-    console.log('Selected years:', startYear, endYear);
-    console.log('Selected education levels:', mappedStartEducationLevel, mappedEndEducationLevel);
+    //console.log('Selected countries:', selectedCountries);
+    // console.log('Selected PISA metric:', selectedMetric_pisa);
+    // console.log('Selected finance metric:', selectedMetric_finance);
+    // console.log('Selected years:', startYear, endYear);
+    // console.log('Selected education levels:', mappedStartEducationLevel, mappedEndEducationLevel);
 
     // Filter the data
     const filteredPisaData = filterPisaData(window.pisaData, selectedMetric_pisa, selectedCountries, startYear, endYear);

@@ -33,7 +33,6 @@ def get_years_countries():
         "countries": country_codes,
         "finance_metrics": finance_metrics
     }
-    print(json.dumps(years_countries_data, indent=4))  # Debug print
     return jsonify(years_countries_data)
 
 
