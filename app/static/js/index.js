@@ -88,7 +88,9 @@ function prepareAndUpdateChart() {
         return;
     }
 
-    const selectedMetric = document.getElementById('finance-metrics').value;
+    // const selectedMetric_pisa = document.getElementById('pisa-metrics').value;
+    const selectedMetric_pisa = 'combined'; // Hardcoded for now, TODO: Implement selection of PISA metrics
+    const selectedMetric_finance = document.getElementById('finance-metrics').value;
     const startYear = parseInt(document.getElementById('start-year').value);
     const endYear = parseInt(document.getElementById('end-year').value);
     const startEducationLevel = parseInt(document.getElementById('start-education-level').value);
@@ -101,27 +103,28 @@ function prepareAndUpdateChart() {
 
     // DEBUG: Log the selected countries, metric, and years
     console.log('Selected countries:', selectedCountries);
-    console.log('Selected metric:', selectedMetric);
+    console.log('Selected PISA metric:', selectedMetric_pisa);
+    console.log('Selected finance metric:', selectedMetric_finance);
     console.log('Selected years:', startYear, endYear);
     console.log('Selected education levels:', mappedStartEducationLevel, mappedEndEducationLevel);
 
     // Filter the data
-    const filteredPisaData = filterPisaData(window.pisaData, selectedCountries, startYear, endYear);
-    const filteredFinanceData = filterFinanceData(window.financeData[selectedMetric], selectedCountries, startEducationLevel, endEducationLevel, startYear, endYear);
+    const filteredPisaData = filterPisaData(window.pisaData, selectedMetric_pisa, selectedCountries, startYear, endYear);
+    const filteredFinanceData = filterFinanceData(window.financeData, selectedMetric_finance, selectedCountries, startEducationLevel, endEducationLevel, startYear, endYear);
 
     // Update the chart
     updateChartData(filteredPisaData, filteredFinanceData);
 }
 
-function filterPisaData(pisaData, countries, startYear, endYear) {
+function filterPisaData(pisaData, metric, countries, startYear, endYear) {
     const filteredData = {};
 
     countries.forEach(country => {
         if (pisaData.countries[country]) {
             filteredData[country] = {};
             for (let year = startYear; year <= endYear; year++) {
-                if (pisaData.countries[country][year]) {
-                    filteredData[country][year] = pisaData.countries[country][year];
+                if (pisaData.countries[country][year] && pisaData.countries[country][year][metric]) {
+                    filteredData[country][year] = pisaData.countries[country][year][metric];
                 }
             }
         }
@@ -130,18 +133,18 @@ function filterPisaData(pisaData, countries, startYear, endYear) {
     return filteredData;
 }
 
-function filterFinanceData(financeData, countries, startEducationLevel, endEducationLevel, startYear, endYear) {
+function filterFinanceData(financeData, metric, countries, startEducationLevel, endEducationLevel, startYear, endYear) {
     const filteredData = {};
 
     countries.forEach(country => {
-        if (financeData.countries[country]) {
+        if (financeData[metric].countries[country]) {
             filteredData[country] = {};
             for (let year = startYear; year <= endYear; year++) {
-                const yearData = financeData.countries[country][year];
+                let yearData = financeData[metric].countries[country][year];
                 if (yearData) {
                     filteredData[country][year] = {};
                     for (let level = startEducationLevel; level <= endEducationLevel; level++) {
-                        const mappedLevel = educationLevelMap[level];
+                        let mappedLevel = educationLevelMap[level];
                         if (yearData[mappedLevel]) {
                             filteredData[country][year][level] = yearData[mappedLevel];
                         }

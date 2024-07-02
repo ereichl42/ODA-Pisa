@@ -1,9 +1,9 @@
-export function createDoubleRangeSlider(containerId, startInputId, endInputId, min, max, onChangeCallback = null) {
+export function createDoubleRangeSlider(containerId, startInputId, endInputId, min, max, step = 1, onChangeCallback = null) {
   const container = document.getElementById(containerId);
   container.innerHTML = `
       <div class="range-slider">
-          <input type="range" id="${startInputId}" name="${startInputId}" min="${min}" max="${max}">
-          <input type="range" id="${endInputId}" name="${endInputId}" min="${min}" max="${max}">
+          <input type="range" id="${startInputId}" name="${startInputId}" min="${min}" max="${max}" step="${step}">
+          <input type="range" id="${endInputId}" name="${endInputId}" min="${min}" max="${max}" step="${step}">
       </div>
   `;
 
