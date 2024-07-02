@@ -5,24 +5,27 @@ export function createDoubleRangeSlider(containerId, startInputId, endInputId, m
           <input type="range" id="${startInputId}" name="${startInputId}" min="${min}" max="${max}" step="${step}">
           <input type="range" id="${endInputId}" name="${endInputId}" min="${min}" max="${max}" step="${step}">
       </div>
+      <div class="range-labels">
+          <span id="${startInputId}-label">${min}</span>
+          <span id="${endInputId}-label">${max}</span>
+      </div>
   `;
 
   const startInput = document.getElementById(startInputId);
   const endInput = document.getElementById(endInputId);
-  // const startLabel = document.getElementById(`${startInputId}-label`);
-  // const endLabel = document.getElementById(`${endInputId}-label`);
+  const startLabel = document.getElementById(`${startInputId}-label`);
+  const endLabel = document.getElementById(`${endInputId}-label`);
 
-  // const updateLabels = () => {
-  //   startLabel.textContent = startInput.value;
-  //   endLabel.textContent = endInput.value;
-  // };
+  const updateLabels = () => {
+    startLabel.textContent = startInput.value;
+    endLabel.textContent = endInput.value;
+  };
 
   startInput.addEventListener('input', () => {
     if (parseInt(startInput.value) > parseInt(endInput.value)) {
       startInput.value = endInput.value;
     }
-    // updateLabels();
-    // Call the callback function if it is provided (optional, e.g. updating a graph)
+    updateLabels();
     if (onChangeCallback) onChangeCallback();
   });
 
@@ -30,11 +33,9 @@ export function createDoubleRangeSlider(containerId, startInputId, endInputId, m
     if (parseInt(endInput.value) < parseInt(startInput.value)) {
       endInput.value = startInput.value;
     }
-    // updateLabels();
-    // Call the callback function if it is provided (optional, e.g. updating a graph)
+    updateLabels();
     if (onChangeCallback) onChangeCallback();
   });
 
-  // Initial update of the labels
-  // updateLabels();
+  updateLabels(); // Initial update of the labels
 }

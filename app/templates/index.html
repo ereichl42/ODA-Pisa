@@ -15,10 +15,18 @@
 <body>
     <div class="container">
         <div class="main-content" id="myControls">
+            <label class="inputHeadLabel">Countries to Show</label>
             <div id="country-selection-box"></div>
+            <label class="inputHeadLabel">Type of Finance Metric</label>
             <div id="finance-metric-selection-box"></div>
-            <div id="year-range-slider"></div>
-            <div id="education-level-range-slider"></div>
+            <label class="inputHeadLabel">Type of PISA Result</label>
+            <div id="pisa-metric-selection-box"></div>
+            <div class="selection-container">
+                <label class="inputHeadLabel">Range of Years</label>
+                <div id="year-range-slider"></div>
+                <label class="inputHeadLabel">Range of Education Levels</label>
+                <div id="education-level-range-slider"></div>
+            </div>
             <button id="apply-metric">Update Graph</button>
         </div>
         <div class="main-content" id="myGraphs">

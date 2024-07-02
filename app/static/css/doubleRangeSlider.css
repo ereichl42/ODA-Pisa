@@ -1,9 +1,63 @@
-.range-slider {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.selection-container {
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
-.range-slider input {
-    width: 45%;
+.range-slider {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.range-slider input[type="range"] {
+    position: absolute;
+    width: 100%;
+    -webkit-appearance: none;
+    /* Add the standard 'appearance' property */
+    appearance: none;
+    background: transparent;
+    pointer-events: none;
+    /* Add a border to make it look like a slider */
+    border: 2px solid #ddd;
+    /* Add border-radius to give it a rounded look */
+    border-radius: 10px;
+    /* Adjust height to match the thumb */
+    height: 10px;
+    /* Center the slider vertically */
+    margin-top: 0px;
+}
+
+.range-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 20px;
+    background: #333;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.range-slider input[type="range"]::-moz-range-thumb {
+    height: 20px;
+    width: 20px;
+    background: #333;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.range-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 0px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+.range-labels span {
+    display: inline-block;
 }

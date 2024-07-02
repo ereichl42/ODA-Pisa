@@ -8,6 +8,14 @@ body {
     background-color: #f0f0f0;
 }
 
+.inputHeadLabel {
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 5px;
+
+}
+
 .container {
     display: flex;
     width: 95%;
@@ -34,6 +42,7 @@ body {
     overflow-y: auto;
     /* Adds a scrollbar if content overflows */
 }
+
 
 #myGraphs {
     flex-grow: 1;
